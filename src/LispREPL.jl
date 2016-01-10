@@ -1,3 +1,5 @@
+module LispREPL
+
 import Base: LineEdit, REPL
 
 function valid_sexpr(s)
@@ -66,3 +68,9 @@ function initrepl(;
 
   nothing
 end
+
+function __init__()
+  initrepl()
+end
+
+end # module

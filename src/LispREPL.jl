@@ -1,26 +1,24 @@
 module LispREPL
 
 import Base: LineEdit, REPL
+import LispSyntax, ParserCombinator
 
 function valid_sexpr(s)
   try
-    Lisp.read(bytestring(LineEdit.buffer(s)))
+    LispSyntax.read(bytestring(LineEdit.buffer(s)))
     true
   catch err
-    isa(err, BoundsError) || rethrow(err)
+    isa(err, ParserCombinator.ParserException) || rethrow(err)
     false
   end
 end
 
-function initrepl(;
-    text  = "lisp> ",
-    color = "\e[35;5;166m",
-    key   = ')'
-  )
+function initrepl(repl)
 
-  isdefined(Base, :active_repl) || return
+  text  = get(ENV, "LISP_PROMPT_TEXT", "lisp> ")
+  color = Base.text_colors[symbol(get(ENV, "LISP_PROMPT_COLOR", :magenta))]
+  key   = ')'
 
-  repl       = Base.active_repl
   julia_mode = repl.interface.modes[1]
 
   prefix = repl.hascolor ? color : ""
@@ -33,7 +31,7 @@ function initrepl(;
     on_enter         = valid_sexpr,
     complete         = REPL.REPLCompletionProvider(repl),
   )
-  lisp_mode.on_done = REPL.respond(s -> :($(Lisp).@lisp($s)), repl, lisp_mode)
+  lisp_mode.on_done = REPL.respond(s -> :($(LispSyntax).@lisp($s)), repl, lisp_mode)
 
   push!(repl.interface.modes, lisp_mode)
 
@@ -70,7 +68,7 @@ function initrepl(;
 end
 
 function __init__()
-  initrepl()
+  isdefined(Base, :active_repl) ? initrepl(Base.active_repl) : nothing
 end
 
 end # module

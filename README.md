@@ -16,11 +16,11 @@ but instead will remain in lisp mode. To return to Julia mode press backspace.
 ## Customization
 
 The lisp mode prompt text and color may be set via your `ENV` settings. For example adding
-the following to your `.bashrc` (or equivalent) file
+the following to your `.juliarc`:
 
-```bash
-export LISP_PROMPT_TEXT="λ "
-export LISP_PROMPT_COLOR="red"
+```julia
+ENV["LISP_PROMPT_TEXT"]  = "λ "
+ENV["LISP_PROMPT_COLOR"] = "red"
 ```
 
 will set the prompt for lisp mode to a red lambda.

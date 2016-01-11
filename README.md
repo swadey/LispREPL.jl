@@ -16,7 +16,7 @@ but instead will remain in lisp mode. To return to Julia mode press backspace.
 ## Customization
 
 The lisp mode prompt text and color may be set via your `ENV` settings. For example adding
-the following to your `.juliarc`:
+the following to your `.juliarc.jl`:
 
 ```julia
 ENV["LISP_PROMPT_TEXT"]  = "λ "

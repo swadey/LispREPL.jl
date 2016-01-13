@@ -1,3 +1,5 @@
+__precompile__()
+
 module LispREPL
 
 import Base: LineEdit, REPL

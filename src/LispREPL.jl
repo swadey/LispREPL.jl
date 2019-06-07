@@ -2,12 +2,12 @@ __precompile__()
 
 module LispREPL
 
-import Base: LineEdit, REPL
+import REPL: REPL, LineEdit
 import LispSyntax, ParserCombinator
 
 function valid_sexpr(s)
   try
-    LispSyntax.read(bytestring(LineEdit.buffer(s)))
+    LispSyntax.read(String(take!(copy(LineEdit.buffer(s)))))
     true
   catch err
     isa(err, ParserCombinator.ParserException) || rethrow(err)
@@ -18,7 +18,7 @@ end
 function initrepl(repl)
 
   text  = get(ENV, "LISP_PROMPT_TEXT", "lisp> ")
-  color = Base.text_colors[symbol(get(ENV, "LISP_PROMPT_COLOR", :magenta))]
+  color = Base.text_colors[Symbol(get(ENV, "LISP_PROMPT_COLOR", :magenta))]
   key   = ')'
 
   julia_mode = repl.interface.modes[1]
@@ -29,9 +29,9 @@ function initrepl(repl)
   lisp_mode = LineEdit.Prompt(text;
     prompt_prefix    = prefix,
     prompt_suffix    = suffix,
-    keymap_func_data = repl,
+    repl             = repl,
     on_enter         = valid_sexpr,
-    complete         = REPL.REPLCompletionProvider(repl),
+    complete         = REPL.REPLCompletionProvider(),
   )
   lisp_mode.on_done = REPL.respond(s -> :($(LispSyntax).@lisp($s)), repl, lisp_mode)
 

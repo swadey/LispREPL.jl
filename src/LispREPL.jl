@@ -33,7 +33,7 @@ function initrepl(repl)
     on_enter         = valid_sexpr,
     complete         = REPL.REPLCompletionProvider(),
   )
-  lisp_mode.on_done = REPL.respond(s -> :($(LispSyntax).@lisp($s)), repl, lisp_mode)
+  lisp_mode.on_done = REPL.respond(s -> :($(LispSyntax).@lisp_str($s)), repl, lisp_mode)
 
   push!(repl.interface.modes, lisp_mode)
 
